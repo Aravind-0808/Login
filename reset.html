@@ -60,6 +60,22 @@
         input:focus {
             outline: none;
         }
+
+        @media screen and (max-width: 500px) {
+
+            label,
+            input,
+            button {
+
+                font-size: 20px;
+
+            }
+
+            .form {
+                padding: 15px;
+            }
+
+        }
     </style>
     <div class="main">
         <div class="form" id="reset">
@@ -105,7 +121,7 @@
 
             // If validation passes, proceed with login
             if (isValid) {
-                window.localStorage.setItem('pass',pass)
+                window.localStorage.setItem('pass', pass)
                 alert("Update successful");
 
                 window.location.href = "Login.html";
