@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register-page</title>
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+
+</head>
+
+<body>
+    <style>
+        .main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100dvh;
+            font-family: sans-serif;
+        }
+
+        label,
+        input,
+        button {
+            display: block;
+            margin: 4px 0px;
+            font-size: 25px;
+            border-radius: 5px;
+            border: none;
+            padding: 5px;
+
+
+        }
+
+        input {
+            background-color: rgba(0, 0, 0, 0.219);
+        }
+
+        button {
+            background-color: rgb(245, 97, 43);
+            color: rgba(255, 255, 255, 0.772);
+        }
+
+        .form {
+            box-shadow: 1px 5px 5px 5px rgba(20, 1, 1, 0.1);
+            padding: 30px;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        label {
+            color: rgba(0, 0, 0, 0.676);
+        }
+
+        .otp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #otp {
+            width: 260px;
+
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        p {
+            margin-bottom: 5px;
+            margin-top: 8px;
+            margin-left: 3px;
+            color: red;
+            display: none;
+        }
+
+        #otpbtn {
+            margin-top: 1.3%;
+            margin-left: -5px;
+            border-radius: 0%;
+
+        }
+    </style>
+    <div class="main">
+        <div class="form">
+            <label for="">Enter your name</label>
+            <input type="text" id="name">
+            <p id="name_error">Error message</p>
+            <label for="">Enter your Email</label>
+            <input type="email" id="email">
+            <p id="email_error">Error message</p>
+            <label for="">Enter Your OTP</label>
+            <div class="otp">
+                <input type="text" id="otp">
+                <button id="otpbtn" onclick="Sendotp()">Send</button>
+            </div>
+            <p id="otp_error">Error message</p>
+            <label for="">Enter your Password</label>
+            <input type="password" id="password">
+            <p id="pass_error">Error message</p>
+            <label for="">Re-Enter your Password</label>
+            <input type="password" id="repassword">
+            <p id="repass_error">Error message</p>
+            <button onclick="reg()">Register</button>
+        </div>
+    </div>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
+    <script>
+
+        function reg() {
+            // Error message elements
+            const name_error = document.getElementById('name_error');
+            const email_error = document.getElementById('email_error');
+            const otp_error = document.getElementById('otp_error');
+            const pass_error = document.getElementById('pass_error');
+            const cpass_error = document.getElementById('repass_error');
+
+            // Input elements
+            const name = document.getElementById('name');
+            const email = document.getElementById('email');
+            const otp = document.getElementById('otp');
+            const pass = document.getElementById('password');
+            const cpass = document.getElementById('repassword');
+            const genopt = localStorage.getItem('otp');
+
+            // Reset previous error messages and borders
+            const errorElements = [name_error, email_error, otp_error, pass_error, cpass_error];
+            errorElements.forEach(error => {
+                error.style.display = 'none';
+                error.textContent = '';
+            });
+
+            const inputElements = [name, email, otp, pass, cpass];
+            inputElements.forEach(input => input.style.border = '1px solid #ccc');
+
+            let isValid = true;
+
+            // Name validation
+            if (name.value.trim() === '') {
+                name_error.style.display = 'block';
+                name_error.textContent = 'Please enter a valid name.';
+                name.style.border = '1px solid red';
+                isValid = false;
+            }
+
+            // Email validation (simple regex for email format)
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email.value.trim() === '' || !emailPattern.test(email.value)) {
+                email_error.style.display = 'block';
+                email_error.textContent = 'Please enter a valid email.';
+                email.style.border = '1px solid red';
+                isValid = false;
+            }
+
+            // OTP validation
+            if (otp.value.trim() === '') {
+                otp_error.style.display = 'block';
+                otp_error.textContent = 'Please enter the OTP.';
+                isValid = false;
+            } else if (otp.value !== genopt) {
+                otp_error.style.display = 'block';
+                otp_error.textContent = 'Invalid OTP.';
+                isValid = false;
+            }
+
+            // Password validation
+            if (pass.value.trim() === '') {
+                pass_error.style.display = 'block';
+                pass_error.textContent = 'Please enter a password.';
+                pass.style.border = '1px solid red';
+                isValid = false;
+            } else if (pass.value.length < 6) {
+                pass_error.style.display = 'block';
+                pass_error.textContent = 'Password must be at least 6 characters long.';
+                pass.style.border = '1px solid red';
+                isValid = false;
+            }
+
+            // Confirm Password validation
+            if (cpass.value.trim() === '') {
+                cpass_error.style.display = 'block';
+                cpass_error.textContent = 'Please confirm your password.';
+                cpass.style.border = '1px solid red';
+                isValid = false;
+            } else if (pass.value !== cpass.value) {
+                cpass_error.style.display = 'block';
+                cpass_error.textContent = 'Passwords do not match.';
+                cpass.style.border = '1px solid red';
+                isValid = false;
+            }
+
+            // If all fields are valid
+            if (isValid) {
+                localStorage.setItem("name", name.value);
+                localStorage.setItem("email", email.value);
+                localStorage.setItem("pass", pass.value);
+                alert("Registered Successfully");
+                window.location.href = "login.html";
+            }
+        }
+
+
+        function Sendotp() {
+
+
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email.value.trim() === '' || !emailPattern.test(email.value)) {
+                email_error.style.display = 'block';
+                email_error.textContent = 'Please enter a valid email.';
+                email.style.border = '1px solid red';
+                isValid = false;
+            }
+            else {
+                emailjs.init('sE54WMincqYXi-5Ov');
+                const email = document.getElementById("email").value;
+                const genotp = Math.floor(100000 + Math.random() * 900000);
+                window.localStorage.setItem("otp", genotp)
+                console.log(genotp)
+                otp_error.style.display = 'block'
+                otp_error.textContent = 'OTP send successfully'
+                otp_error.style.color = 'green'
+
+                email_error.style.display = 'none';
+
+
+                // Send OTP via EmailJS
+                const templateParams = {
+                    to_email: email,
+                    otp_code: genotp,
+                };
+
+                emailjs.send('service_hr6acnt', 'template_ah8y9qg', templateParams)
+                    .then(function (response) {
+                        alert('OTP sent successfully');
+                        console.log('Success:', response);
+                    }, function (error) {
+                        alert('Failed to send OTP');
+                        console.log('Error:', error);
+                    });
+            }
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        .main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: sans-serif;
+        }
+
+        label,
+        input,
+        button {
+            display: block;
+            margin: 4px 0px;
+            font-size: 25px;
+            border-radius: 5px;
+            padding: 5px;
+            border: none;
+        }
+
+        input {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background-color: rgb(245, 97, 43);
+            color: #ffffff;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .form {
+            box-shadow: 1px 5px 5px 5px rgba(20, 1, 1, 0.1);
+            padding: 30px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        label {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            display: none;
+        }
+
+        input:focus {
+            outline: none;
+        }
+    </style>
+    <div class="main">
+        <div class="form" id="reset">
+
+            <label for="password">Enter your new Password</label>
+            <input type="password" id="password">
+            <p id="password_error" class="error">Please enter your password.</p>
+
+            <label for="repassword">Re-Enter your Password</label>
+            <input type="password" id="repassword">
+            <p id="repassword_error" class="error">Passwords do not match.</p>
+
+            <button onclick="reset()">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        function reset() {
+
+            document.getElementById('password_error').style.display = 'none';
+            document.getElementById('repassword_error').style.display = 'none';
+
+
+            const pass = document.getElementById('password').value;
+            const cpass = document.getElementById('repassword').value;
+
+            const loginEmail = localStorage.getItem("email");
+            const loginPass = localStorage.getItem("pass");
+
+            let isValid = true;
+
+
+
+            if (pass === '') {
+                document.getElementById('password_error').style.display = 'block';
+                isValid = false;
+            }
+
+            if (pass !== cpass) {
+                document.getElementById('repassword_error').style.display = 'block';
+                isValid = false;
+            }
+
+            // If validation passes, proceed with login
+            if (isValid) {
+                window.localStorage.setItem('pass',pass)
+                alert("Update successful");
+
+                window.location.href = "Login.html";
+            } else {
+                alert("Invalid password");
+            }
+        }
+
+    </script>
+</body>
+
+</html>
